@@ -53,11 +53,17 @@ public class DoctorController {
 		
 	}
 	
-	@PostMapping(value = "updateSlot",consumes = MediaType.APPLICATION_JSON)
-	public int updateSlotDetails(@RequestBody Doctor doctor)
+	@PostMapping(value = "addSlot",consumes = MediaType.APPLICATION_JSON)
+	public String addSlotDetails(@RequestBody Doctor doctor)
 	{
-		return doctorService.updateSlotDetails(doctor);
+		int updateStatus =  doctorService.addSlotDetails(doctor); 
 		
+		if(updateStatus==1)
+			return "Slot has been added successfully";
+		else if(updateStatus==0)
+			return "Doctor with given id doesn't exists!";
+		else
+			return "Error Occured while adding slot!";
 	}
 	
 	

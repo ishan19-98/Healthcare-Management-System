@@ -51,11 +51,15 @@ public class AppointmentService {
             		timeLst.remove(timeslot);
             		String[] array = timeLst.toArray(new String[0]);
             		doctor.setSlotAvailibility(array);
-            		int docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/updateSlot", doctor, Integer.class);
-            		if(docUpdated==1)
-            		return "Slot Booked Successfully";
+            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/addSlot", doctor, String.class);
+            		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
+            		{
+            			return "Appointment Created Successfully";
+            		}
             		else
-            		return "Error occured while booking slot";
+            		{
+            			return "Error occurred while creating appointment";
+            		}
             	}
             	else
             	{
@@ -107,12 +111,16 @@ public class AppointmentService {
             		timeLst.add(oldtimeslot);
             		String[] array = timeLst.toArray(new String[0]);
             		doctor.setSlotAvailibility(array);
-            		int docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/updateSlot", doctor, Integer.class);
-            		if(docUpdated==1)
-        		      return "Slot Timings Updated Successfully";
+            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/addSlot", doctor, String.class);
+            		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
+            		{
+            			return "Appointment Updated Successfully";
+            		}
             		else
-            		  return "Error in Updating Slots in Doctor's Table";
-                }
+            		{
+            			return "Error occurred while creating appointment";
+            		}  
+            	}
                 return "Error Encountered While Updating Appointment";
         	}
         	else
@@ -128,7 +136,7 @@ public class AppointmentService {
 		Optional<Appointment> appointment = appointmentRepository.findById(aid);
 		if(appointment.isEmpty())
 		{
-			return "Appointment with given id doesn't exists!";
+			return "Appointment with given id doesn't exists!"; 
 		}
 		else
 		{
@@ -146,12 +154,16 @@ public class AppointmentService {
         		timeLst.add(oldtimeslot);
         		String[] array = timeLst.toArray(new String[0]);
         		doctor.setSlotAvailibility(array);
-        		int docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/updateSlot", doctor, Integer.class);
-        		if(docUpdated==1)
-        		return "Appointment has been cancelled Successfully!";
+        		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/addSlot", doctor, String.class);
+        		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
+        		{
+        			return "Appointment deleted successfully";
+        		}
         		else
-        		return "Error occured while cancelling slot";
-            }
+        		{
+        			return "Error occurred while cancelling appointment";
+        		}            
+        		}
             else
             {
             	return "Error Occured While Updating Doctor's Slot";

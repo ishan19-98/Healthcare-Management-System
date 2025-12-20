@@ -24,7 +24,8 @@ public class HealthcareApiGatewayApplication {
 				route(r->r.path("/doctor/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
 										uri("http://localhost:8282")).
 				route(r->r.path("/appointment/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
-						uri("http://localhost:8383")).route(r->r.path("/bill/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
+						uri("http://localhost:8383")).route(r->r.path("/slot/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
+								uri("http://localhost:8383")).route(r->r.path("/bill/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
 								uri("http://localhost:8484")).
 				build();
 	}

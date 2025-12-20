@@ -22,12 +22,16 @@ public class SlotService {
 		int length = myrequest.getParam2().length;
 		for(int i=0;i<length;i++)
 		{
+	    Slot ifExists = slotRepository.getSlotByTime(LocalTime.parse(myrequest.getParam2()[i]));		
+	    if(ifExists==null)
+	    {
 		Slot slot = new Slot();
 		slot.setDid(myrequest.getParam1());
 		slot.setDate(LocalDate.now());
 		slot.setTime(LocalTime.parse((CharSequence) myrequest.getParam2()[i]));
 		slot.setBookFlag(false);
 		slotRepository.save(slot);
+		}
 		}
 		
 		return 1;
