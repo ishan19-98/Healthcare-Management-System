@@ -112,26 +112,27 @@ public class DoctorService {
 			Doctornew.setAge(result.get().getAge());
 			Doctornew.setPhoneno(result.get().getPhoneno());
 			
-			List<String> newSlots = Arrays.asList(Doctor.getSlotAvailibility());
-			
-			// Make a mutable list from the old slots
-			List<String> oldslots = new ArrayList<>(Arrays.asList(result.get().getSlotAvailibility()));
-
-
-			oldslots.addAll(newSlots);
-			
-			// Convert to Set (remove duplicates) -> String[]
-			String[] mergedSlots = oldslots.stream().sorted()
-			                               .collect(Collectors.toSet())
-			                               .toArray(new String[0]);
-			
-			Doctornew.setSlotAvailibility(mergedSlots);
+//			List<String> newSlots = Arrays.asList(Doctor.getSlotAvailibility());
+//			
+//			// Make a mutable list from the old slots
+//			List<String> oldslots = new ArrayList<>(Arrays.asList(result.get().getSlotAvailibility()));
+//
+//
+//			oldslots.addAll(newSlots);
+//			
+//			// Convert to Set (remove duplicates) -> String[]
+//			String[] mergedSlots = oldslots.stream().sorted()
+//			                               .collect(Collectors.toSet())
+//			                               .toArray(new String[0]);
+//			
+//			Doctornew.setSlotAvailibility(mergedSlots);
+			Doctornew.setSlotAvailibility(Doctor.getSlotAvailibility());
 			doctorRepository.saveAndFlush(Doctornew);
 			
 			//updating slots in slots repository
 			MyRequest request = new MyRequest();
 	        request.setParam1(Doctornew.getDid());
-	        request.setParam2(mergedSlots);
+	        request.setParam2(Doctornew.getSlotAvailibility());
 			int slotscreated = restTemplate.postForObject("http://APPOINTMENT-MICRO-SERVICE/slot/create", request, Integer.class);
 			if(slotscreated==1)
 			 return 1;

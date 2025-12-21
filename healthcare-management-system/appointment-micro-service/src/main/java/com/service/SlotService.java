@@ -2,6 +2,7 @@ package com.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ public class SlotService {
 		slotRepository.save(slot);
 		}
 		}
-		
 		return 1;
 	}
 	

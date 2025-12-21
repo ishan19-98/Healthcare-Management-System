@@ -20,6 +20,9 @@ public interface SlotRepository extends JpaRepository<Slot, Integer>{
 	@Query("SELECT s FROM Slot s WHERE s.time = :time")
     public Slot getSlotByTime(@Param("time") LocalTime newtimeslot);
 	
+	@Query("Delete FROM Slot s WHERE s.time = :time")
+    public Slot removeSlotByTime(@Param("time") LocalTime newtimeslot);
+	
 	@Modifying
 	@Transactional
 	@Query("UPDATE Slot s SET s.bookFlag = :bookFlag WHERE s.sid = :sid and s.did=:did")

@@ -40,6 +40,10 @@ public class AppointmentService {
             {
             	String timeslot = appointment.getTimeslot();
             	Slot slot = slotRepository.getSlotByTime(LocalTime.parse(timeslot));
+            	if(slot==null)
+            	{
+            		return "There is no available slot exists for given time. Try booking some other time slot.";
+            	}
             	if(!slot.isBookFlag())
             	{
             		appointment.setPatientName(patient.getPname());
