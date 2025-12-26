@@ -44,7 +44,7 @@ public class AppointmentService {
             	Slot slot = slotRepository.getSlotByTime(LocalTime.parse(timeslot));
             	if(slot==null)
             	{
-            		return "There is no available slot exists for given time. Try booking some other time slot.";
+        			throw new ResourceNotFoundException("There is no available slot exists for given time. Try booking some other time slot.");
             	}
             	if(!slot.isBookFlag())
             	{
@@ -69,7 +69,7 @@ public class AppointmentService {
             	}
             	else
             	{
-            		return "This time slot is already booked, try booking another slot!";
+        			throw new ResourceNotFoundException("This slot is already occupied, Try booking for some other slot");
             	}
             	
             }
@@ -131,7 +131,7 @@ public class AppointmentService {
         	}
         	else
         	{
-        		return "This slot is already occupied, Try booking for some other slot";
+    			throw new ResourceNotFoundException("This slot is already occupied, Try booking for some other slot");
         	}
 			
 		}

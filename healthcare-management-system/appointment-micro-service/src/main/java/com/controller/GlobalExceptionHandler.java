@@ -15,13 +15,13 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(GlobalException.class)
 	public ResponseEntity<ErrorResponse> handleGlobalException(Exception exp)
 	{
-		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage(),exp.getStackTrace());
+		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage());
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);	}
 	
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleAppointmentNotFoundException(ResourceNotFoundException exp)
 	{
-		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage(),exp.getStackTrace());
+		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage());
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.entity.Patient;
+import com.exception.ConflictException;
 import com.exception.GlobalException;
 import com.exception.ResourceNotFoundException;
 import com.repository.PatientRepository;
@@ -16,11 +17,11 @@ public class PatientService {
 	@Autowired
 	PatientRepository patientRepository;
 	
-	public String storePatient(Patient patient) throws GlobalException {
+	public String storePatient(Patient patient) throws GlobalException, ConflictException {
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
 		if(result.isPresent())
 		{
-			throw new GlobalException("Patient with given id already exists! Try adding patient using some other patient id.");
+			throw new ConflictException("Patient with given id already exists! Try adding patient using some other patient id.");
 		}
 		else
 		{

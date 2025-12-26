@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entity.Patient;
+import com.exception.ConflictException;
 import com.exception.GlobalException;
 import com.exception.ResourceNotFoundException;
 import com.service.PatientService;
@@ -26,7 +27,7 @@ public class PatientController {
 	PatientService patientService;
 	
 	@PostMapping(value = "store",consumes = MediaType.APPLICATION_JSON)
-	public String storePatient(@RequestBody Patient patient) throws GlobalException
+	public String storePatient(@RequestBody Patient patient) throws GlobalException, ConflictException
 	{
 		return patientService.storePatient(patient);
 		

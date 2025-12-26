@@ -4,14 +4,9 @@ public class ErrorResponse {
 
 	public String message;
 	
-	public StackTraceElement[] stackTrace;
-
-	
-	
-	public ErrorResponse(String message, StackTraceElement[] stackTrace) {
+	public ErrorResponse(String message) {
 		super();
 		this.message = message;
-		this.stackTrace = stackTrace;
 	}
 
 	public String getMessage() {
@@ -21,14 +16,5 @@ public class ErrorResponse {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	public StackTraceElement[] getStackTrace() {
-		return stackTrace;
-	}
-
-	public void setStackTrace(StackTraceElement[] stackTrace) {
-		this.stackTrace = stackTrace;
-	}
-	
 	
 }
