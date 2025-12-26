@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entity.Doctor;
+import com.exception.ConflictException;
+import com.exception.GlobalException;
+import com.exception.ResourceNotFoundException;
 import com.service.DoctorService;
 
 import jakarta.ws.rs.core.MediaType;
@@ -26,7 +29,7 @@ public class DoctorController {
 	DoctorService doctorService;
 	
 	@PostMapping(value = "store",consumes = MediaType.APPLICATION_JSON)
-	public String storedoctor(@RequestBody Doctor doctor)
+	public String storedoctor(@RequestBody Doctor doctor) throws GlobalException, ConflictException
 	{
 		return doctorService.storeDoctor(doctor);
 		
@@ -47,23 +50,23 @@ public class DoctorController {
 	}
 	
 	@PutMapping(value = "update",consumes = MediaType.APPLICATION_JSON)
-	public String updatedoctorDetails(@RequestBody Doctor doctor)
+	public String updatedoctorDetails(@RequestBody Doctor doctor) throws ResourceNotFoundException
 	{
 		return doctorService.updateDoctorDetails(doctor);
 		
 	}
 	
 	@PostMapping(value = "addSlot",consumes = MediaType.APPLICATION_JSON)
-	public String addSlotDetails(@RequestBody Doctor doctor)
+	public String addSlotDetails(@RequestBody Doctor doctor) throws GlobalException, ResourceNotFoundException
 	{
 		int updateStatus =  doctorService.addSlotDetails(doctor); 
 		
 		if(updateStatus==1)
 			return "Slot has been added successfully";
 		else if(updateStatus==0)
-			return "Doctor with given id doesn't exists!";
+			throw new ResourceNotFoundException("Doctor " + doctor.getDid() + " with given id doesn't exists!");
 		else
-			return "Error Occured while adding slot!";
+			throw new GlobalException("Error Occured while adding slot!");
 	}
 	
 	

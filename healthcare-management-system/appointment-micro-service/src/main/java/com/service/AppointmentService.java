@@ -15,6 +15,8 @@ import com.bean.Doctor;
 import com.bean.Patient;
 import com.entity.Appointment;
 import com.entity.Slot;
+import com.exception.ResourceNotFoundException;
+import com.exception.GlobalException;
 import com.repository.AppointmentRepository;
 import com.repository.SlotRepository;
 
@@ -30,7 +32,7 @@ public class AppointmentService {
 	@Autowired
 	RestTemplate restTemplate;
 	
-	public String createAppointment(Appointment appointment) {
+	public String createAppointment(Appointment appointment) throws GlobalException, ResourceNotFoundException {
 		// TODO Auto-generated method stub
 		Patient patient = restTemplate.getForObject("http://PATIENT-MICRO-SERVICE/patient/findbyid/"+appointment.getPid(), Patient.class);
 		if(patient != null)
@@ -62,7 +64,7 @@ public class AppointmentService {
             		}
             		else
             		{
-            			return "Error occurred while creating appointment";
+            			throw new GlobalException("Error occurred while creating appointment");
             		}
             	}
             	else
@@ -73,12 +75,12 @@ public class AppointmentService {
             }
             else
             {
-            	return "Doctor Record Doesnot exists";
+    			throw new ResourceNotFoundException("Doctor Record Doesnot exists");
             }
 		}
 		else
 		{
-			return "Patient Record Doesnot exists";
+			throw new ResourceNotFoundException("Patient Record Doesnot exists");
 		}
 	}
 
@@ -87,11 +89,11 @@ public class AppointmentService {
 		return appointmentRepository.findById(id);
 	}
 
-	public String updateAppointmentDetails(Appointment appointment) {
+	public String updateAppointmentDetails(Appointment appointment) throws ResourceNotFoundException, GlobalException {
 		Optional<Appointment> appointmentDb = appointmentRepository.findById(appointment.getAid());
 		if(appointmentDb.isEmpty())
 		{
-			return "Appointment with given id doesn't exists!";
+			throw new ResourceNotFoundException("Appointment with given id doesn't exists!");
 		}
 		else
 		{
@@ -122,10 +124,10 @@ public class AppointmentService {
             		}
             		else
             		{
-            			return "Error occurred while creating appointment";
+            			throw new GlobalException("Error occurred while creating appointment");
             		}  
             	}
-                return "Error Encountered While Updating Appointment";
+    			throw new GlobalException("Error Encountered While Updating Appointment");
         	}
         	else
         	{
@@ -135,12 +137,12 @@ public class AppointmentService {
 		}
 	}
 
-	public String deleteAppointmentById(int aid) {
+	public String deleteAppointmentById(int aid) throws GlobalException, ResourceNotFoundException {
 		// TODO Auto-generated method stub
 		Optional<Appointment> appointment = appointmentRepository.findById(aid);
 		if(appointment.isEmpty())
 		{
-			return "Appointment with given id doesn't exists!"; 
+			throw new ResourceNotFoundException("Appointment with given id doesn't exists!");
 		}
 		else
 		{
@@ -165,12 +167,12 @@ public class AppointmentService {
         		}
         		else
         		{
-        			return "Error occurred while cancelling appointment";
+        			throw new GlobalException("Error occurred while cancelling appointment");
         		}            
         		}
             else
             {
-            	return "Error Occured While Updating Doctor's Slot";
+    			throw new GlobalException("Error Occured While Updating Doctor's Slot");
             }
 	       
 		}

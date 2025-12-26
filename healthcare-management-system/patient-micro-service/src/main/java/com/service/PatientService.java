@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.entity.Patient;
+import com.exception.GlobalException;
+import com.exception.ResourceNotFoundException;
 import com.repository.PatientRepository;
 
 @Service
@@ -14,11 +16,11 @@ public class PatientService {
 	@Autowired
 	PatientRepository patientRepository;
 	
-	public String storePatient(Patient patient) {
+	public String storePatient(Patient patient) throws GlobalException {
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
 		if(result.isPresent())
 		{
-			return "Patient with given id already exists! Try adding patient using some other patient id.";
+			throw new GlobalException("Patient with given id already exists! Try adding patient using some other patient id.");
 		}
 		else
 		{
@@ -35,11 +37,11 @@ public class PatientService {
 	 * Update patient details with the new details fetched from request body.
 	 * Details not passed will remain same as before.
 	 */
-	public String updatePatientDetails(Patient patient) {
+	public String updatePatientDetails(Patient patient) throws ResourceNotFoundException {
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
 		if(result.isEmpty())
 		{
-			return "Patient " + result.get().getPname() + " with given id doesn't exists!";
+			throw new ResourceNotFoundException("Patient " + result.get().getPname() + " with given id doesn't exists!");
 		}
 		else
 		{

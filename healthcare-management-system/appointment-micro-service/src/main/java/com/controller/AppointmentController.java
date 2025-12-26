@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entity.Appointment;
+import com.exception.GlobalException;
+import com.exception.ResourceNotFoundException;
 import com.service.AppointmentService;
 
 import jakarta.ws.rs.core.MediaType;
@@ -25,7 +27,7 @@ public class AppointmentController {
 	AppointmentService appointmentService;
 	
 	@PostMapping(value = "create",consumes = MediaType.APPLICATION_JSON)
-	public String storeappointment(@RequestBody Appointment appointment)
+	public String storeappointment(@RequestBody Appointment appointment) throws GlobalException, ResourceNotFoundException
 	{
 		return appointmentService.createAppointment(appointment);
 		
@@ -39,14 +41,14 @@ public class AppointmentController {
 	}
 	
 	@PutMapping(value = "update",consumes = MediaType.APPLICATION_JSON)
-	public String updateappointmentDetails(@RequestBody Appointment appointment)
+	public String updateappointmentDetails(@RequestBody Appointment appointment) throws ResourceNotFoundException, GlobalException
 	{
 		return appointmentService.updateAppointmentDetails(appointment);
 		
 	}
 	
 	@DeleteMapping(value = "cancel/{aid}")
-	public String cancelAppointmentById(@PathVariable("aid") Integer aid)
+	public String cancelAppointmentById(@PathVariable("aid") Integer aid) throws ResourceNotFoundException, GlobalException
 	{
 		return appointmentService.deleteAppointmentById(aid);
 		

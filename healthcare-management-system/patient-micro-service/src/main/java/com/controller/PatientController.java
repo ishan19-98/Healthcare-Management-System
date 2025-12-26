@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entity.Patient;
+import com.exception.GlobalException;
+import com.exception.ResourceNotFoundException;
 import com.service.PatientService;
 
 import jakarta.ws.rs.core.MediaType;
@@ -24,7 +26,7 @@ public class PatientController {
 	PatientService patientService;
 	
 	@PostMapping(value = "store",consumes = MediaType.APPLICATION_JSON)
-	public String storePatient(@RequestBody Patient patient)
+	public String storePatient(@RequestBody Patient patient) throws GlobalException
 	{
 		return patientService.storePatient(patient);
 		
@@ -38,7 +40,7 @@ public class PatientController {
 	}
 	
 	@PutMapping(value = "update",consumes = MediaType.APPLICATION_JSON)
-	public String updatePatientDetails(@RequestBody Patient patient)
+	public String updatePatientDetails(@RequestBody Patient patient) throws ResourceNotFoundException
 	{
 		return patientService.updatePatientDetails(patient);
 		

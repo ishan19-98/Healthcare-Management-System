@@ -13,7 +13,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.bean.MyRequest;
 import com.entity.Doctor;
+import com.exception.GlobalException;
+import com.exception.ResourceNotFoundException;
 import com.repository.DoctorRepository;
+import com.exception.ConflictException;
 
 @Service
 public class DoctorService {
@@ -24,11 +27,11 @@ public class DoctorService {
 	@Autowired
 	RestTemplate restTemplate;
 	
-	public String storeDoctor(Doctor Doctor) {
+	public String storeDoctor(Doctor Doctor) throws GlobalException, ConflictException {
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isPresent())
 		{
-			return "Doctor " + result.get().getDname() + " with given id already exists!";
+			throw new ConflictException("Doctor " + result.get().getDname() + " with given id already exists!");
 		}
 		else
 		{   
@@ -43,7 +46,7 @@ public class DoctorService {
 		}
 		else
 		{
-			return "Error occured while creating slots for doctor "+ Doctor.getDname();
+			throw new GlobalException("Error occured while creating slots for doctor "+ Doctor.getDname());
 		}
 		}
 	}
@@ -64,11 +67,11 @@ public class DoctorService {
 	 * This method is used to update basic doctor details like name,age, phone number.
 	 * Slot details are updated using differant api hence this method do not update slot details.
 	 */
-	public String updateDoctorDetails(Doctor Doctor) {
+	public String updateDoctorDetails(Doctor Doctor) throws ResourceNotFoundException {
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isEmpty())
 		{
-			return "Doctor " + result.get().getDname() + " with given id doesn't exists!";
+			throw new ResourceNotFoundException("Doctor " + result.get().getDname() + " with given id doesn't exists!");
 		}
 		else
 		{
