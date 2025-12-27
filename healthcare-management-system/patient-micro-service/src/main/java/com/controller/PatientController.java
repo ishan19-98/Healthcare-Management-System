@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,33 +21,38 @@ import com.service.PatientService;
 import jakarta.ws.rs.core.MediaType;
 
 @RestController
-@RequestMapping("patient")
+@RequestMapping("patients")
 public class PatientController {
 	
 	@Autowired
 	PatientService patientService;
 	
-	@PostMapping(value = "store",consumes = MediaType.APPLICATION_JSON)
+	@PostMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String storePatient(@RequestBody Patient patient) throws GlobalException, ConflictException
 	{
 		return patientService.storePatient(patient);
 		
 	}
 	
-	@GetMapping(value = "findbyid/{id}",produces = MediaType.APPLICATION_JSON)
+	@GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON)
 	public Optional<Patient> findPatient(@PathVariable("id") Integer id)
 	{
 		return patientService.findPatientById(id);
 		
 	}
 	
-	@PutMapping(value = "update",consumes = MediaType.APPLICATION_JSON)
+	@PutMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String updatePatientDetails(@RequestBody Patient patient) throws ResourceNotFoundException
 	{
 		return patientService.updatePatientDetails(patient);
 		
 	}
 	
-	
+	@GetMapping(value = "",produces = MediaType.APPLICATION_JSON)
+	public Optional<List<Patient>> findAllPatient()
+	{
+		return patientService.findAllPatients();
+		
+	}
 
 }

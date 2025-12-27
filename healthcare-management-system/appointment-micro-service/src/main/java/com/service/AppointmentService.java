@@ -1,11 +1,12 @@
 package com.service;
 
-import java.sql.Time;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,11 +34,10 @@ public class AppointmentService {
 	RestTemplate restTemplate;
 	
 	public String createAppointment(Appointment appointment) throws GlobalException, ResourceNotFoundException {
-		// TODO Auto-generated method stub
-		Patient patient = restTemplate.getForObject("http://PATIENT-MICRO-SERVICE/patient/findbyid/"+appointment.getPid(), Patient.class);
+		Patient patient = restTemplate.getForObject("http://PATIENT-MICRO-SERVICE/patients/"+appointment.getPid(), Patient.class);
 		if(patient != null)
 		{
-			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctor/findbyid/"+appointment.getDid(), Doctor.class);
+			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+appointment.getDid(), Doctor.class);
             if(doctor != null)
             {
             	String timeslot = appointment.getTimeslot();
@@ -53,11 +53,12 @@ public class AppointmentService {
             		appointmentRepository.save(appointment);
             		slotRepository.updateSlotDetails(true, slot.getSid(),doctor.getDid());
             		String[] timeAry = doctor.getSlotAvailibility();
-            		List<String> timeLst = new ArrayList<>(Arrays.asList(timeAry));            		
+            		Set<String> timeLst = new LinkedHashSet<>(Arrays.asList(timeAry)); 
             		timeLst.remove(timeslot);
-            		String[] array = timeLst.toArray(new String[0]);
+            		List<String> timeLstUpdated=timeLst.stream().sorted().collect(Collectors.toList());
+            		String[] array = timeLstUpdated.toArray(new String[0]);
             		doctor.setSlotAvailibility(array);
-            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/addSlot", doctor, String.class);
+            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctors/slot", doctor, String.class);
             		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
             		{
             			return "Appointment Created Successfully";
@@ -71,7 +72,6 @@ public class AppointmentService {
             	{
         			throw new ResourceNotFoundException("This slot is already occupied, Try booking for some other slot");
             	}
-            	
             }
             else
             {
@@ -85,7 +85,6 @@ public class AppointmentService {
 	}
 
 	public Optional<Appointment> findAppointmentById(Integer id) {
-		// TODO Auto-generated method stub
 		return appointmentRepository.findById(id);
 	}
 
@@ -109,15 +108,17 @@ public class AppointmentService {
         		appointmentRepository.updateAppointmentTime(newtimeslot, appointment.getAid());
         		
         		int docId= Integer.parseInt(appointmentDb.get().getDid());
-    			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctor/findbyid/"+docId, Doctor.class);
+    			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+docId, Doctor.class);
                 if(doctor != null)
                 {
                 	String[] timeAry = doctor.getSlotAvailibility();
-            		List<String> timeLst = new ArrayList<>(Arrays.asList(timeAry));            		
+                	Set<String> timeLst = new LinkedHashSet<>(Arrays.asList(timeAry));  
             		timeLst.add(oldtimeslot);
-            		String[] array = timeLst.toArray(new String[0]);
+            		timeLst.remove(newtimeslot);
+            		List<String> timeLstUpdated=timeLst.stream().sorted().collect(Collectors.toList());
+            		String[] array = timeLstUpdated.toArray(new String[0]);
             		doctor.setSlotAvailibility(array);
-            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/addSlot", doctor, String.class);
+            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctors/slot", doctor, String.class);
             		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
             		{
             			return "Appointment Updated Successfully";
@@ -138,7 +139,6 @@ public class AppointmentService {
 	}
 
 	public String deleteAppointmentById(int aid) throws GlobalException, ResourceNotFoundException {
-		// TODO Auto-generated method stub
 		Optional<Appointment> appointment = appointmentRepository.findById(aid);
 		if(appointment.isEmpty())
 		{
@@ -152,15 +152,16 @@ public class AppointmentService {
 			appointmentRepository.deleteById(aid); 
 			
 			int docId= Integer.parseInt(appointment.get().getDid());
-			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctor/findbyid/"+docId, Doctor.class);
+			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+docId, Doctor.class);
             if(doctor != null)
             {
             	String[] timeAry = doctor.getSlotAvailibility();
-        		List<String> timeLst = new ArrayList<>(Arrays.asList(timeAry));            		
+        		Set<String> timeLst = new LinkedHashSet<>(Arrays.asList(timeAry));            		
         		timeLst.add(oldtimeslot);
-        		String[] array = timeLst.toArray(new String[0]);
+        		List<String> timeLstUpdated=timeLst.stream().sorted().collect(Collectors.toList());
+        		String[] array = timeLstUpdated.toArray(new String[0]);
         		doctor.setSlotAvailibility(array);
-        		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctor/addSlot", doctor, String.class);
+        		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctors/slot", doctor, String.class);
         		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
         		{
         			return "Appointment deleted successfully";

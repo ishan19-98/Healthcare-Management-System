@@ -19,13 +19,13 @@ public class HealthcareApiGatewayApplication {
 	@Bean
 	public RouteLocator myCustomerLocator(RouteLocatorBuilder builder) {
 		return builder.
-				routes().route(r->r.path("/patient/**").and().method("GET","PUT","DELETE","POST").
+				routes().route(r->r.path("/patients/**").and().method("GET","PUT","DELETE","POST").
 						filters(f->f.addRequestParameter("msg", "Welcome")).uri("http://localhost:8181")).
-				route(r->r.path("/doctor/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
+				route(r->r.path("/doctors/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
 										uri("http://localhost:8282")).
-				route(r->r.path("/appointment/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
-						uri("http://localhost:8383")).route(r->r.path("/slot/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
-								uri("http://localhost:8383")).route(r->r.path("/bill/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
+				route(r->r.path("/appointments/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
+						uri("http://localhost:8383")).route(r->r.path("/slots/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
+								uri("http://localhost:8383")).route(r->r.path("/bills/**").and().method("GET","POST","PUT","DELETE").filters(f->f.addResponseHeader("res-key", "res-value")).
 								uri("http://localhost:8484")).
 				build();
 	}

@@ -16,19 +16,19 @@ import com.entity.Slot;
 import com.service.SlotService;
 
 @RestController
-@RequestMapping("slot")
+@RequestMapping("slots")
 public class SlotController {
 
 	@Autowired
 	SlotService slotService;
 	
-	@PostMapping(value = "create")
+	@PostMapping(value = "")
 	public int createSlot(@RequestBody MyRequest myrequest)
 	{
 		return slotService.createSlot(myrequest);
 	}
 	
-	@GetMapping(value="getslotsbydoctorid/{did}")
+	@GetMapping(value="doctor/{did}")
 	public LocalTime[] findSlotsByDoctorId(@PathVariable("did") int did)
 	{
 		return slotService.findSlotsByDoctorId(did);

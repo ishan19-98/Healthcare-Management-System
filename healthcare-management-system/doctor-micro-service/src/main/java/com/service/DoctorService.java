@@ -1,16 +1,11 @@
 package com.service;
 
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import com.bean.MyRequest;
 import com.entity.Doctor;
 import com.exception.GlobalException;
@@ -38,7 +33,7 @@ public class DoctorService {
 		MyRequest request = new MyRequest();
         request.setParam1(Doctor.getDid());
         request.setParam2(Doctor.getSlotAvailibility());
-		int slotscreated = restTemplate.postForObject("http://APPOINTMENT-MICRO-SERVICE/slot/create", request, Integer.class);
+		int slotscreated = restTemplate.postForObject("http://APPOINTMENT-MICRO-SERVICE/slots", request, Integer.class);
 		if(slotscreated==1)
 		{
 		doctorRepository.save(Doctor);
@@ -51,10 +46,9 @@ public class DoctorService {
 		}
 	}
 
-	public List<String> findDoctorSchedule(int did) {
-		List<String> timeslot = restTemplate.getForObject("http://APPOINTMENT-MICRO-SERVICE/slot/getslotsbydoctorid/"+did, List.class);
+	public Set<String> findDoctorSchedule(int did) {
+		Set<String> timeslot = restTemplate.getForObject("http://APPOINTMENT-MICRO-SERVICE/slots/doctor/"+did, Set.class);
         return timeslot;
-		
 	}
 
 	public Optional<Doctor> findDoctorById(int did) {
@@ -136,7 +130,7 @@ public class DoctorService {
 			MyRequest request = new MyRequest();
 	        request.setParam1(Doctornew.getDid());
 	        request.setParam2(Doctornew.getSlotAvailibility());
-			int slotscreated = restTemplate.postForObject("http://APPOINTMENT-MICRO-SERVICE/slot/create", request, Integer.class);
+			int slotscreated = restTemplate.postForObject("http://APPOINTMENT-MICRO-SERVICE/slots", request, Integer.class);
 			if(slotscreated==1)
 			 return 1;
 			else

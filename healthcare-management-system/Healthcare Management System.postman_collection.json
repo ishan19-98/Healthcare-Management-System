@@ -22,15 +22,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/patient/store",
+					"raw": "http://localhost:8080/patients",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"patient",
-						"store"
+						"patients"
 					]
 				}
 			},
@@ -51,15 +50,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/doctor/store",
+					"raw": "http://localhost:8080/doctors",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"doctor",
-						"store"
+						"doctors"
 					]
 				}
 			},
@@ -72,7 +70,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"pid\": 1,\r\n  \"pname\": \"Ajay\",\r\n  \"age\": 30,\r\n  \"phoneno\": 9876543210\r\n}\r\n",
+					"raw": "{\r\n  \"pid\": 1,\r\n  \"did\": \"101\",\r\n  \"timeslot\": \"11:00:00\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -80,15 +78,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/patient/store",
+					"raw": "http://localhost:8080/appointments",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"patient",
-						"store"
+						"appointments"
 					]
 				}
 			},
@@ -109,15 +106,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/slot/create",
+					"raw": "http://localhost:8080/slots",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"slot",
-						"create"
+						"slots"
 					]
 				}
 			},
@@ -138,15 +134,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/doctor/addSlot",
+					"raw": "http://localhost:8080/doctors/slot",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"doctor",
-						"addSlot"
+						"doctors",
+						"slot"
 					]
 				}
 			},
@@ -167,15 +163,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/patient/update",
+					"raw": "http://localhost:8080/patients",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"patient",
-						"update"
+						"patients"
 					]
 				}
 			},
@@ -188,7 +183,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"pid\": 1,\r\n  \"pname\": \"Ajay\",\r\n  \"age\": 30,\r\n  \"phoneno\": 9876543201\r\n}\r\n",
+					"raw": "{\r\n  \"did\": 101,\r\n  \"dname\": \"Dr. Priya Sharma\",\r\n  \"age\": 45,\r\n  \"phoneno\": 9876543210\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -196,15 +191,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/patient/update",
+					"raw": "http://localhost:8080/doctors",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"patient",
-						"update"
+						"doctors"
 					]
 				}
 			},
@@ -217,7 +211,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"pid\": 1,\r\n  \"patientName\": \"Ajay\",\r\n  \"did\": \"101\",\r\n  \"doctorName\": \"Dr. Priya Sharma\",\r\n  \"amount\": 500.0,\r\n  \"timeslot\": \"10:00:00\"\r\n}",
+					"raw": "{\r\n  \"aid\": 2,\r\n  \"timeslot\": \"10:00:00\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -225,15 +219,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/appointment/update",
+					"raw": "http://localhost:8080/appointments",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"appointment",
-						"update"
+						"appointments"
 					]
 				}
 			},
@@ -241,9 +234,54 @@
 		},
 		{
 			"name": "[Patient]fetch-using-id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pid\": 1,\r\n  \"pname\": \"Ajay\",\r\n  \"age\": 30,\r\n  \"phoneno\": 9876543210\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/patients/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "[Patient]fetch-all-patients",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pid\": 1,\r\n  \"pname\": \"Ajay\",\r\n  \"age\": 30,\r\n  \"phoneno\": 9876543210\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/patients",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"patients"
+					]
+				}
 			},
 			"response": []
 		},
@@ -251,7 +289,19 @@
 			"name": "[Appointment]fetch-using-id",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/appointments/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"appointments",
+						"2"
+					]
+				}
 			},
 			"response": []
 		},
@@ -261,16 +311,15 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/appointment/findbyid/1",
+					"raw": "http://localhost:8080/appointments/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"appointment",
-						"findbyid",
-						"1"
+						"appointments",
+						"2"
 					]
 				}
 			},
@@ -278,25 +327,84 @@
 		},
 		{
 			"name": "[Doctor]fetch-using-id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pid\": 1,\r\n  \"pname\": \"Ajay\",\r\n  \"age\": 30,\r\n  \"phoneno\": 9876543210\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/doctors/101",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"doctors",
+						"101"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "[Slot]fetch-slots-using-doctor-id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pid\": 1,\r\n  \"pname\": \"Ajay\",\r\n  \"age\": 30,\r\n  \"phoneno\": 9876543210\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/slots/doctor/101",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"slots",
+						"doctor",
+						"101"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "[Doctor]fetch-doctor-availibility-using-id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"pid\": 1,\r\n  \"pname\": \"Ajay\",\r\n  \"age\": 30,\r\n  \"phoneno\": 9876543210\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:8080/doctors/schedule/101",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"doctors",
+						"schedule",
+						"101"
+					]
+				}
 			},
 			"response": []
 		}

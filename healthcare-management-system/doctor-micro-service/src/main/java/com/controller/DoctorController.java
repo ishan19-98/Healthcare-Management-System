@@ -3,6 +3,7 @@ package com.controller;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,13 +23,13 @@ import com.service.DoctorService;
 import jakarta.ws.rs.core.MediaType;
 
 @RestController
-@RequestMapping("doctor")
+@RequestMapping("doctors")
 public class DoctorController {
 	
 	@Autowired
 	DoctorService doctorService;
 	
-	@PostMapping(value = "store",consumes = MediaType.APPLICATION_JSON)
+	@PostMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String storedoctor(@RequestBody Doctor doctor) throws GlobalException, ConflictException
 	{
 		return doctorService.storeDoctor(doctor);
@@ -36,27 +37,24 @@ public class DoctorController {
 	}
 	
 	@GetMapping(value = "schedule/{did}",produces = MediaType.APPLICATION_JSON)
-	public List<String> findDoctorSchedule(@PathVariable int did)
+	public Set<String> findDoctorSchedule(@PathVariable int did)
 	{
 		return doctorService.findDoctorSchedule(did);
-		
 	}
 	
-	@GetMapping(value = "findbyid/{did}",produces = MediaType.APPLICATION_JSON)
+	@GetMapping(value = "/{did}",produces = MediaType.APPLICATION_JSON)
 	public Optional<Doctor> findDoctorById(@PathVariable int did)
 	{
-		return doctorService.findDoctorById(did);
-		
+		return doctorService.findDoctorById(did);	
 	}
 	
-	@PutMapping(value = "update",consumes = MediaType.APPLICATION_JSON)
+	@PutMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String updatedoctorDetails(@RequestBody Doctor doctor) throws ResourceNotFoundException
 	{
 		return doctorService.updateDoctorDetails(doctor);
-		
 	}
 	
-	@PostMapping(value = "addSlot",consumes = MediaType.APPLICATION_JSON)
+	@PostMapping(value = "slot",consumes = MediaType.APPLICATION_JSON)
 	public String addSlotDetails(@RequestBody Doctor doctor) throws GlobalException, ResourceNotFoundException
 	{
 		int updateStatus =  doctorService.addSlotDetails(doctor); 

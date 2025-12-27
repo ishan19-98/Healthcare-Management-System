@@ -1,5 +1,6 @@
 package com.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +68,10 @@ public class PatientService {
 			patientRepository.saveAndFlush(patientnew);
 			return "Patient "+ patientnew.getPname() + " details updated successfully";
 		}
+	}
+
+	public Optional<List<Patient>> findAllPatients() {
+		return Optional.of(patientRepository.findAll());
 	}
 
 }

@@ -20,34 +20,33 @@ import com.service.AppointmentService;
 import jakarta.ws.rs.core.MediaType;
 
 @RestController
-@RequestMapping("appointment")
+@RequestMapping("appointments")
 public class AppointmentController {
 	
 	@Autowired
 	AppointmentService appointmentService;
 	
-	@PostMapping(value = "create",consumes = MediaType.APPLICATION_JSON)
+	@PostMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String storeappointment(@RequestBody Appointment appointment) throws GlobalException, ResourceNotFoundException
 	{
 		return appointmentService.createAppointment(appointment);
 		
 	}
 	
-	@GetMapping(value = "findbyid/{id}",produces = MediaType.APPLICATION_JSON)
+	@GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON)
 	public Optional<Appointment> findappointment(@PathVariable("id") Integer id)
 	{
 		return appointmentService.findAppointmentById(id);
-		
 	}
 	
-	@PutMapping(value = "update",consumes = MediaType.APPLICATION_JSON)
+	@PutMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String updateappointmentDetails(@RequestBody Appointment appointment) throws ResourceNotFoundException, GlobalException
 	{
 		return appointmentService.updateAppointmentDetails(appointment);
 		
 	}
 	
-	@DeleteMapping(value = "cancel/{aid}")
+	@DeleteMapping(value = "/{aid}")
 	public String cancelAppointmentById(@PathVariable("aid") Integer aid) throws ResourceNotFoundException, GlobalException
 	{
 		return appointmentService.deleteAppointmentById(aid);

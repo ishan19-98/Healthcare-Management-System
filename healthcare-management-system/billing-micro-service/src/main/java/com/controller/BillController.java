@@ -17,20 +17,20 @@ import com.service.BillService;
 import jakarta.ws.rs.core.MediaType;
 
 @RestController
-@RequestMapping("bill")
+@RequestMapping("bills")
 public class BillController {
 	
 	@Autowired
 	BillService billService;
 	
-	@PostMapping(value = "create",consumes = MediaType.APPLICATION_JSON)
+	@PostMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String storeBill(@RequestBody Bill bill)
 	{
 		return billService.createBill(bill);
 		
 	}
 	
-	@GetMapping(value = "findbyid/{id}",produces = MediaType.APPLICATION_JSON)
+	@GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON)
 	public Optional<Bill> findBill(@PathVariable("id") String id)
 	{
 		return billService.findBillById(id);
