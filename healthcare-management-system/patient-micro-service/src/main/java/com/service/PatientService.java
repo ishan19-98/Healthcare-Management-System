@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.entity.Patient;
@@ -70,8 +72,8 @@ public class PatientService {
 		}
 	}
 
-	public Optional<List<Patient>> findAllPatients() {
-		return Optional.of(patientRepository.findAll());
+	public Optional<Page<Patient>> findAllPatients(Pageable pageable) {
+		return Optional.of(patientRepository.findAll(pageable));
 	}
 
 }
