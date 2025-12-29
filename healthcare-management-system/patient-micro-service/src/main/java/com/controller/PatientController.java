@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.entity.Patient;
+import com.bean.PatientDTO;
 import com.exception.ConflictException;
 import com.exception.GlobalException;
 import com.exception.ResourceNotFoundException;
 import com.service.PatientService;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import jakarta.ws.rs.core.MediaType;
 
 @RestController
@@ -33,28 +35,28 @@ public class PatientController {
 	PatientService patientService;
 	
 	@PostMapping(value = "",consumes = MediaType.APPLICATION_JSON)
-	public String storePatient(@RequestBody Patient patient) throws GlobalException, ConflictException
+	public String storePatient(@Valid @RequestBody PatientDTO patient) throws GlobalException, ConflictException
 	{
 		return patientService.storePatient(patient);
 		
 	}
 	
 	@GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON)
-	public Optional<Patient> findPatient(@PathVariable("id") Integer id)
+	public PatientDTO findPatient(@PathVariable("id") @Positive Integer id)
 	{
 		return patientService.findPatientById(id);
 		
 	}
 	
 	@PutMapping(value = "",consumes = MediaType.APPLICATION_JSON)
-	public String updatePatientDetails(@RequestBody Patient patient) throws ResourceNotFoundException
+	public String updatePatientDetails(@RequestBody PatientDTO patient) throws ResourceNotFoundException
 	{
 		return patientService.updatePatientDetails(patient);
 		
 	}
 	
 	@GetMapping(value = "",produces = MediaType.APPLICATION_JSON)
-	public Optional<Page<Patient>> findAllPatient(@RequestParam(defaultValue = "0") int page,
+	public Page<PatientDTO> findAllPatient(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "pid") String sortBy,
 			@RequestParam(defaultValue = "asc") String direction)

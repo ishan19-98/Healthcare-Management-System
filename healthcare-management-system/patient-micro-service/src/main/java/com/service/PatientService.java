@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.bean.PatientDTO;
 import com.entity.Patient;
 import com.exception.ConflictException;
 import com.exception.GlobalException;
@@ -20,7 +21,8 @@ public class PatientService {
 	@Autowired
 	PatientRepository patientRepository;
 	
-	public String storePatient(Patient patient) throws GlobalException, ConflictException {
+	public String storePatient(PatientDTO patientDto) throws GlobalException, ConflictException {
+		Patient patient=convertBeanToEntity(patientDto);
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
 		if(result.isPresent())
 		{
@@ -33,15 +35,16 @@ public class PatientService {
 		}
 	}
 
-	public Optional<Patient> findPatientById(Integer id) {
-		return patientRepository.findById(id);
+	public PatientDTO findPatientById(Integer id) {
+		return convertEntityToBean(patientRepository.findById(id).get());
 	}
 
 	/*
 	 * Update patient details with the new details fetched from request body.
 	 * Details not passed will remain same as before.
 	 */
-	public String updatePatientDetails(Patient patient) throws ResourceNotFoundException {
+	public String updatePatientDetails(PatientDTO patientDto) throws ResourceNotFoundException {
+		Patient patient=convertBeanToEntity(patientDto);
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
 		if(result.isEmpty())
 		{
@@ -72,8 +75,30 @@ public class PatientService {
 		}
 	}
 
-	public Optional<Page<Patient>> findAllPatients(Pageable pageable) {
-		return Optional.of(patientRepository.findAll(pageable));
+	public Page<PatientDTO> findAllPatients(Pageable pageable) {
+		return patientRepository.findAll(pageable).map(PatientService::convertEntityToBean);
+	}
+	
+	private static Patient convertBeanToEntity(PatientDTO patientDto)
+	{
+		Patient patient = new Patient();
+		patient.setPid(patientDto.getPid());
+		patient.setPname(patientDto.getPname());
+		patient.setPhoneno(patientDto.getPhoneno());
+		patient.setAge(patientDto.getAge());
+		
+		return patient;
+	}
+	
+	private static PatientDTO convertEntityToBean(Patient patient)
+	{
+		PatientDTO patientDto = new PatientDTO();
+		patientDto.setPid(patient.getPid());
+		patientDto.setPname(patient.getPname());
+		patientDto.setPhoneno(patient.getPhoneno());
+		patientDto.setAge(patient.getAge());
+		
+		return patientDto;
 	}
 
 }
