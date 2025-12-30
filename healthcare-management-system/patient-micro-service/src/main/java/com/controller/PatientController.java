@@ -68,5 +68,11 @@ public class PatientController {
 		return patientService.findAllPatients(pageable);
 		
 	}
+	
+	@GetMapping(value = "phone/{phoneno}",produces = MediaType.APPLICATION_JSON)
+	public PatientDTO findPatientByPhoneNo(@PathVariable("phoneno") Long phoneno)
+	{
+		return patientService.findPatientByPhoneNumber(phoneno);		
+	}
 
 }

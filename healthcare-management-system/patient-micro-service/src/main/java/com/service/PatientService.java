@@ -38,6 +38,10 @@ public class PatientService {
 	public PatientDTO findPatientById(Integer id) {
 		return convertEntityToBean(patientRepository.findById(id).get());
 	}
+	
+	public PatientDTO findPatientByPhoneNumber(Long phoneno) {
+		return convertEntityToBean(patientRepository.findPatientByPhoneNumber(phoneno).get());
+	}
 
 	/*
 	 * Update patient details with the new details fetched from request body.
