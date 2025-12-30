@@ -15,12 +15,15 @@ import com.exception.GlobalException;
 import com.exception.ResourceNotFoundException;
 import com.repository.PatientRepository;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+
 @Service
 public class PatientService {
 
 	@Autowired
 	PatientRepository patientRepository;
-	
+
 	public String storePatient(PatientDTO patientDto) throws GlobalException, ConflictException {
 		Patient patient=convertBeanToEntity(patientDto);
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
