@@ -1,0 +1,39 @@
+
+services:
+ 
+ eureka-server:
+  build: ./eureka-server
+  ports:
+   - 8761:8761
+
+ patient-micro-service:
+  build: ./patient-micro-service
+  depends_on: 
+   - eureka-server
+  ports:
+   - 8181:8181
+
+ doctor-micro-service:
+  build: ./doctor-micro-service
+  depends_on: 
+   - eureka-server
+  ports:
+   - 8282:8282
+
+ appointment-micro-service:
+  build: ./appointment-micro-service
+  depends_on:
+   - patient-micro-service
+   - doctor-micro-service
+  ports:
+   - 8383:8383 
+
+ healthcare-api-gateway:
+  build: ./healthcare-api-gateway
+  depends_on:
+   - eureka-server
+  ports:
+   - 8080:8080   
+   
+   
+   
