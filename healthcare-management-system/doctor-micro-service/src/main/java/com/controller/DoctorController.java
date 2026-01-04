@@ -19,6 +19,7 @@ import com.exception.ConflictException;
 import com.exception.GlobalException;
 import com.exception.ResourceNotFoundException;
 import com.service.DoctorService;
+import com.service.DoctorServiceImpl;
 
 import jakarta.ws.rs.core.MediaType;
 
