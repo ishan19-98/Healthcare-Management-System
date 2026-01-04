@@ -16,6 +16,7 @@ public class SlotServiceImpl implements SlotService {
 	@Autowired
 	SlotRepository slotRepository;
 
+	@Override
 	public int createSlot(MyRequest myrequest) {
 		// TODO Auto-generated method stub
 		int length = myrequest.getParam2().length;
@@ -35,6 +36,7 @@ public class SlotServiceImpl implements SlotService {
 		return 1;
 	}
 	
+	@Override
 	public LocalTime[] findSlotsByDoctorId(int did) {
 		
 		LocalTime[] timeslot = slotRepository.findSlotsByDoctorId(did);

@@ -33,6 +33,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	@Override
 	public String createAppointment(Appointment appointment) throws GlobalException, ResourceNotFoundException {
 		Patient patient = restTemplate.getForObject("http://PATIENT-MICRO-SERVICE/patients/"+appointment.getPid(), Patient.class);
 		if(patient != null)
@@ -84,10 +85,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 		}
 	}
 
+	@Override
 	public Optional<Appointment> findAppointmentById(Integer id) {
 		return appointmentRepository.findById(id);
 	}
 
+	@Override
 	public String updateAppointmentDetails(Appointment appointment) throws ResourceNotFoundException, GlobalException {
 		Optional<Appointment> appointmentDb = appointmentRepository.findById(appointment.getAid());
 		if(appointmentDb.isEmpty())
@@ -138,6 +141,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		}
 	}
 
+	@Override
 	public String deleteAppointmentById(int aid) throws GlobalException, ResourceNotFoundException {
 		Optional<Appointment> appointment = appointmentRepository.findById(aid);
 		if(appointment.isEmpty())

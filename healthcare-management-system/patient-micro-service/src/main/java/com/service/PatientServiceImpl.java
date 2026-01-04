@@ -20,6 +20,7 @@ public class PatientServiceImpl implements PatientService {
 	@Autowired
 	PatientRepository patientRepository;
 
+	@Override
 	public String storePatient(PatientDTO patientDto) throws GlobalException, ConflictException {
 		Patient patient=convertBeanToEntity(patientDto);
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
@@ -34,10 +35,12 @@ public class PatientServiceImpl implements PatientService {
 		}
 	}
 
+	@Override
 	public PatientDTO findPatientById(Integer id) {
 		return convertEntityToBean(patientRepository.findById(id).get());
 	}
 	
+	@Override
 	public PatientDTO findPatientByPhoneNumber(Long phoneno) {
 		return convertEntityToBean(patientRepository.findPatientByPhoneNumber(phoneno).get());
 	}
@@ -46,6 +49,7 @@ public class PatientServiceImpl implements PatientService {
 	 * Update patient details with the new details fetched from request body.
 	 * Details not passed will remain same as before.
 	 */
+	@Override
 	public String updatePatientDetails(PatientDTO patientDto) throws ResourceNotFoundException {
 		Patient patient=convertBeanToEntity(patientDto);
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
@@ -78,6 +82,7 @@ public class PatientServiceImpl implements PatientService {
 		}
 	}
 
+	@Override
 	public Page<PatientDTO> findAllPatients(Pageable pageable) {
 		return patientRepository.findAll(pageable).map(PatientServiceImpl::convertEntityToBean);
 	}

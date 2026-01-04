@@ -22,6 +22,7 @@ public class DoctorServiceImpl implements DoctorService {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	@Override
 	public String storeDoctor(Doctor Doctor) throws GlobalException, ConflictException {
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isPresent())
@@ -46,11 +47,13 @@ public class DoctorServiceImpl implements DoctorService {
 		}
 	}
 
+	@Override
 	public Set<String> findDoctorSchedule(int did) {
 		Set<String> timeslot = restTemplate.getForObject("http://APPOINTMENT-MICRO-SERVICE/slots/doctor/"+did, Set.class);
         return timeslot;
 	}
 
+	@Override
 	public Optional<Doctor> findDoctorById(int did) {
 		Optional<Doctor> doctor = doctorRepository.findById(did);
         return doctor;
@@ -61,6 +64,7 @@ public class DoctorServiceImpl implements DoctorService {
 	 * This method is used to update basic doctor details like name,age, phone number.
 	 * Slot details are updated using differant api hence this method do not update slot details.
 	 */
+	@Override
 	public String updateDoctorDetails(Doctor Doctor) throws ResourceNotFoundException {
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isEmpty())
@@ -95,6 +99,7 @@ public class DoctorServiceImpl implements DoctorService {
 		}
 	}
 
+	@Override
 	public int addSlotDetails(Doctor Doctor) {
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isEmpty())
