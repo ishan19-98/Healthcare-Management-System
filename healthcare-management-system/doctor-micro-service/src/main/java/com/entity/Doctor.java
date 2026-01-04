@@ -15,6 +15,9 @@ public class Doctor {
 	public long phoneno;
 	public String[] slotAvailibility; 
 	
+	// Flag to indicate if slots creation is pending
+    private boolean slotsPending = false;
+	
 	public int getDid() {
 		return did;
 	}
@@ -45,6 +48,13 @@ public class Doctor {
 	public void setSlotAvailibility(String[] slotAvailibility) {
 		this.slotAvailibility = slotAvailibility;
 	}
+	public boolean isSlotsPending() {
+		return slotsPending;
+	}
+	public void setSlotsPending(boolean slotsPending) {
+		this.slotsPending = slotsPending;
+	}
+	
 	
 	
 }

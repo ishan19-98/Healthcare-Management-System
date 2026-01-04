@@ -1,5 +1,6 @@
 package com.service;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -11,6 +12,9 @@ import com.entity.Doctor;
 import com.exception.GlobalException;
 import com.exception.ResourceNotFoundException;
 import com.repository.DoctorRepository;
+
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 import com.exception.ConflictException;
 
 @Service
@@ -23,6 +27,7 @@ public class DoctorServiceImpl implements DoctorService {
 	RestTemplate restTemplate;
 	
 	@Override
+	@CircuitBreaker(name = "APPOINTMENT-MICRO-SERVICE", fallbackMethod = "slotSyncFallBack")
 	public String storeDoctor(Doctor Doctor) throws GlobalException, ConflictException {
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isPresent())
@@ -37,6 +42,7 @@ public class DoctorServiceImpl implements DoctorService {
 		int slotscreated = restTemplate.postForObject("http://APPOINTMENT-MICRO-SERVICE/slots", request, Integer.class);
 		if(slotscreated==1)
 		{
+		Doctor.setSlotsPending(false);
 		doctorRepository.save(Doctor);
 		return "Doctor " + Doctor.getDname() + " details stored successfully";
 		}
@@ -128,6 +134,14 @@ public class DoctorServiceImpl implements DoctorService {
 		     return 2;		
 			
 		}
+	}
+	
+	public String slotSyncFallBack(Doctor Doctor, Throwable ex)
+	{
+        System.out.println("Appointment service DOWN. Slot sync deferred for Doctor"+Doctor.getDname());
+        Doctor.setSlotsPending(true);
+        doctorRepository.save(Doctor);
+        return "Doctor details are stored locally. Slots will be synced with appointment service once it is UP.";
 	}
 	
 }
