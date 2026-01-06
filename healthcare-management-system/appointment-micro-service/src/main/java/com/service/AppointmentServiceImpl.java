@@ -43,7 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		Patient patient = remoteClient.fetchPatient(appointment);
 		if(patient != null)
 		{
-			Doctor doctor = remoteClient.fetchDoctor(appointment);
+			Doctor doctor = remoteClient.fetchDoctor(Integer.parseInt(appointment.getDid()));
             if(doctor != null)
             {
             	String timeslot = appointment.getTimeslot();
@@ -116,7 +116,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         		appointmentRepository.updateAppointmentTime(newtimeslot, appointment.getAid());
         		
         		int docId= Integer.parseInt(appointmentDb.get().getDid());
-    			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+docId, Doctor.class);
+    			Doctor doctor = remoteClient.fetchDoctor(docId);
                 if(doctor != null)
                 {
                 	String[] timeAry = doctor.getSlotAvailibility();
@@ -126,7 +126,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             		List<String> timeLstUpdated=timeLst.stream().sorted().collect(Collectors.toList());
             		String[] array = timeLstUpdated.toArray(new String[0]);
             		doctor.setSlotAvailibility(array);
-            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctors/slot", doctor, String.class);
+            		String docUpdated =  remoteClient.updateDoctorSlots(doctor);
             		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
             		{
             			return "Appointment Updated Successfully";
@@ -161,7 +161,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 			appointmentRepository.deleteById(aid); 
 			
 			int docId= Integer.parseInt(appointment.get().getDid());
-			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+docId, Doctor.class);
+			Doctor doctor = remoteClient.fetchDoctor(docId);
             if(doctor != null)
             {
             	String[] timeAry = doctor.getSlotAvailibility();
@@ -170,7 +170,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         		List<String> timeLstUpdated=timeLst.stream().sorted().collect(Collectors.toList());
         		String[] array = timeLstUpdated.toArray(new String[0]);
         		doctor.setSlotAvailibility(array);
-        		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctors/slot", doctor, String.class);
+        		String docUpdated = remoteClient.updateDoctorSlots(doctor);
         		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
         		{
         			return "Appointment deleted successfully";

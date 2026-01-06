@@ -25,9 +25,9 @@ public class AppointmentRemoteClient {
 	}
 	
 	@CircuitBreaker(name = "DOCTOR-FETCH-CIRCUIT-BREAKER", fallbackMethod = "fetchDoctorFallBack")
-	public Doctor fetchDoctor(Appointment appointment)
+	public Doctor fetchDoctor(int Did)
 	{
-		return 	restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+appointment.getDid(), Doctor.class);
+		return 	restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+Did, Doctor.class);
 	}
 	
 	@CircuitBreaker(name = "DOCTOR-SLOTS-SYNC-CIRCUIT-BREAKER", fallbackMethod = "updateDoctorSlotsFallBack")
@@ -42,9 +42,14 @@ public class AppointmentRemoteClient {
 		throw new ResourceNotFoundException("Unable to fetch Patient details. Either Patient Service is DOWN or Patient record doesnot exists in database!");
 	}
 	
-	public Doctor fetchDoctorFallBack(Appointment appointment, Throwable ex) throws ResourceNotFoundException
+	public Doctor fetchDoctorFallBack(int Did, Throwable ex) throws ResourceNotFoundException
 	{
 		throw new ResourceNotFoundException("Unable to fetch Doctor details. Doctor Service is DOWN or Doctor record doesnot exists in database!");
+	}
+	
+	public Doctor updateDoctorSlotsFallBack(Doctor doctor, Throwable ex) throws ResourceNotFoundException
+	{
+		throw new ResourceNotFoundException("Unable to update Doctor slots. Doctor Service is DOWN!");
 	}
 
 	
