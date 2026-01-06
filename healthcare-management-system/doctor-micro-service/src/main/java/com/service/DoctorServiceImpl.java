@@ -27,7 +27,7 @@ public class DoctorServiceImpl implements DoctorService {
 	RestTemplate restTemplate;
 	
 	@Override
-	@CircuitBreaker(name = "APPOINTMENT-MICRO-SERVICE", fallbackMethod = "slotSyncFallBack")
+	@CircuitBreaker(name = "APPOINTMENT-MICRO-SERVICE-CIRCUIT-BREAKER", fallbackMethod = "slotSyncFallBack")
 	public String storeDoctor(Doctor Doctor) throws GlobalException, ConflictException {
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isPresent())

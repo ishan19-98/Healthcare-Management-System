@@ -9,8 +9,16 @@ public class Doctor {
 	public String dname;
 	public int age;
 	public long phoneno;
-	public String[] slotAvailibility; 
+	public String[] slotAvailibility;
 	
+    private boolean slotsPending = false;
+	
+	public boolean isSlotsPending() {
+		return slotsPending;
+	}
+	public void setSlotsPending(boolean slotsPending) {
+		this.slotsPending = slotsPending;
+	}
 	public String[] getSlotAvailibility() {
 		return slotAvailibility;
 	}

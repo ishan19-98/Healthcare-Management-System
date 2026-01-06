@@ -21,6 +21,8 @@ import com.exception.GlobalException;
 import com.repository.AppointmentRepository;
 import com.repository.SlotRepository;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
@@ -33,12 +35,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	@Autowired
+    private AppointmentRemoteClient remoteClient;
+	
 	@Override
 	public String createAppointment(Appointment appointment) throws GlobalException, ResourceNotFoundException {
-		Patient patient = restTemplate.getForObject("http://PATIENT-MICRO-SERVICE/patients/"+appointment.getPid(), Patient.class);
+		Patient patient = remoteClient.fetchPatient(appointment);
 		if(patient != null)
 		{
-			Doctor doctor = restTemplate.getForObject("http://DOCTOR-MICRO-SERVICE/doctors/"+appointment.getDid(), Doctor.class);
+			Doctor doctor = remoteClient.fetchDoctor(appointment);
             if(doctor != null)
             {
             	String timeslot = appointment.getTimeslot();
@@ -59,7 +64,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             		List<String> timeLstUpdated=timeLst.stream().sorted().collect(Collectors.toList());
             		String[] array = timeLstUpdated.toArray(new String[0]);
             		doctor.setSlotAvailibility(array);
-            		String docUpdated = restTemplate.postForObject("http://DOCTOR-MICRO-SERVICE/doctors/slot", doctor, String.class);
+            		String docUpdated = remoteClient.updateDoctorSlots(doctor);
             		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
             		{
             			return "Appointment Created Successfully";
@@ -182,5 +187,4 @@ public class AppointmentServiceImpl implements AppointmentService {
 	       
 		}
 	}
-
 }
