@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.bean.MyRequest;
+import com.bean.DoctorDTO;
 import com.entity.Doctor;
 import com.exception.GlobalException;
 import com.exception.ResourceNotFoundException;
@@ -28,7 +29,8 @@ public class DoctorServiceImpl implements DoctorService {
 	
 	@Override
 	@CircuitBreaker(name = "APPOINTMENT-MICRO-SERVICE-CIRCUIT-BREAKER", fallbackMethod = "slotSyncFallBack")
-	public String storeDoctor(Doctor Doctor) throws GlobalException, ConflictException {
+	public String storeDoctor(DoctorDTO DoctorDTO) throws GlobalException, ConflictException {
+		Doctor Doctor = convertBeanToEntity(DoctorDTO);
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isPresent())
 		{
@@ -60,9 +62,10 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
-	public Optional<Doctor> findDoctorById(int did) {
+	public DoctorDTO findDoctorById(int did) {
 		Optional<Doctor> doctor = doctorRepository.findById(did);
-        return doctor;
+		DoctorDTO DoctorDTO = convertEntityToBean(doctor.get());
+        return DoctorDTO;
 		
 	}
 	
@@ -71,7 +74,8 @@ public class DoctorServiceImpl implements DoctorService {
 	 * Slot details are updated using differant api hence this method do not update slot details.
 	 */
 	@Override
-	public String updateDoctorDetails(Doctor Doctor) throws ResourceNotFoundException {
+	public String updateDoctorDetails(DoctorDTO DoctorDTO) throws ResourceNotFoundException {
+		Doctor Doctor = convertBeanToEntity(DoctorDTO);
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isEmpty())
 		{
@@ -106,7 +110,8 @@ public class DoctorServiceImpl implements DoctorService {
 	}
 
 	@Override
-	public int addSlotDetails(Doctor Doctor) {
+	public int addSlotDetails(DoctorDTO DoctorDTO) {
+		Doctor Doctor = convertBeanToEntity(DoctorDTO);
 		Optional<Doctor> result = doctorRepository.findById(Doctor.getDid());
 		if(result.isEmpty())
 		{
@@ -142,6 +147,39 @@ public class DoctorServiceImpl implements DoctorService {
         Doctor.setSlotsPending(true);
         doctorRepository.save(Doctor);
         return "Doctor details are stored locally. Slots will be synced with appointment service once it is UP.";
+	}
+	
+	private static Doctor convertBeanToEntity(DoctorDTO DoctorDto)
+	{
+		Doctor Doctor = new Doctor();
+		
+		Doctor.setDid(DoctorDto.getDid());
+		
+		if(DoctorDto.getDname()!=null)
+		Doctor.setDname(DoctorDto.getDname());
+		
+		if(DoctorDto.getPhoneno() != null)
+		Doctor.setPhoneno(DoctorDto.getPhoneno());
+		
+		if(DoctorDto.getAge()!= null)
+		Doctor.setAge(DoctorDto.getAge());
+		
+		if(DoctorDto.getSlotAvailibility()!=null)
+		Doctor.setSlotAvailibility(DoctorDto.getSlotAvailibility());
+		
+		return Doctor;
+	}
+	
+	private static DoctorDTO convertEntityToBean(Doctor Doctor)
+	{
+		DoctorDTO DoctorDto = new DoctorDTO();
+		DoctorDto.setDid(Doctor.getDid());
+		DoctorDto.setDname(Doctor.getDname());
+		DoctorDto.setPhoneno(Doctor.getPhoneno());
+		DoctorDto.setAge(Doctor.getAge());
+		DoctorDto.setSlotAvailibility(Doctor.getSlotAvailibility());
+		
+		return DoctorDto;
 	}
 	
 }
