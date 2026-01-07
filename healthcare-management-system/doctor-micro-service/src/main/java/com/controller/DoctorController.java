@@ -18,6 +18,7 @@ import com.exception.ResourceNotFoundException;
 import com.service.DoctorService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import jakarta.ws.rs.core.MediaType;
 
 @RestController
@@ -35,13 +36,13 @@ public class DoctorController {
 	}
 	
 	@GetMapping(value = "schedule/{did}",produces = MediaType.APPLICATION_JSON)
-	public Set<String> findDoctorSchedule(@PathVariable int did)
+	public Set<String> findDoctorSchedule(@PathVariable @Positive int did)
 	{
 		return doctorService.findDoctorSchedule(did);
 	}
 	
 	@GetMapping(value = "/{did}",produces = MediaType.APPLICATION_JSON)
-	public DoctorDTO findDoctorById(@PathVariable int did)
+	public DoctorDTO findDoctorById(@PathVariable @Positive int did)
 	{
 		return doctorService.findDoctorById(did);	
 	}

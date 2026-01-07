@@ -1,9 +1,13 @@
 package com.controller;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import com.bean.ErrorResponse;
 import com.exception.ResourceNotFoundException;
@@ -32,6 +36,27 @@ public class GlobalExceptionHandler {
 	{
 		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage());
 		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.CONFLICT);	
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exp)
+	{
+		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage());
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);	
+	}
+	
+	@ExceptionHandler(HandlerMethodValidationException.class)
+	public ResponseEntity<ErrorResponse> handleHandlerMethodValidationException(HandlerMethodValidationException exp)
+	{
+		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage());
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);	
+	}
+	
+	@ExceptionHandler(NoSuchElementException.class)
+	public ResponseEntity<ErrorResponse> handleNoSuchElementExceptionException(NoSuchElementException exp)
+	{
+		ErrorResponse errorResponse = new ErrorResponse(exp.getMessage());
+		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);	
 	}
 
 }
