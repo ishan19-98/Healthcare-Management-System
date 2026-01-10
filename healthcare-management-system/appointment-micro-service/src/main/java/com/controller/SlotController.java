@@ -19,8 +19,12 @@ import com.service.SlotService;
 @RequestMapping("slots")
 public class SlotController {
 
-	@Autowired
-	SlotService slotService;
+	private SlotService slotService;
+	
+	public SlotController(SlotService slotService)
+	{
+		this.slotService=slotService;
+	}
 	
 	@PostMapping(value = "")
 	public int createSlot(@RequestBody MyRequest myrequest)

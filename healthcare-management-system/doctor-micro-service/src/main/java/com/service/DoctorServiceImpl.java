@@ -1,10 +1,8 @@
 package com.service;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.bean.MyRequest;
@@ -21,11 +19,17 @@ import com.exception.ConflictException;
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
-	@Autowired
-	DoctorRepository doctorRepository;
 	
-	@Autowired
-	RestTemplate restTemplate;
+	private DoctorRepository doctorRepository;
+	
+	
+	private RestTemplate restTemplate;
+	
+	public DoctorServiceImpl(DoctorRepository doctorRepository,RestTemplate restTemplate)
+	{
+		this.doctorRepository=doctorRepository;
+		this.restTemplate=restTemplate;
+	}
 	
 	@Override
 	@CircuitBreaker(name = "APPOINTMENT-MICRO-SERVICE-CIRCUIT-BREAKER", fallbackMethod = "slotSyncFallBack")
@@ -141,11 +145,12 @@ public class DoctorServiceImpl implements DoctorService {
 		}
 	}
 	
-	public String slotSyncFallBack(Doctor Doctor, Throwable ex)
+	public String slotSyncFallBack(DoctorDTO Doctor, Throwable ex)
 	{
-        System.out.println("Appointment service DOWN. Slot sync deferred for Doctor"+Doctor.getDname());
-        Doctor.setSlotsPending(true);
-        doctorRepository.save(Doctor);
+		Doctor doctor=convertBeanToEntity(Doctor);
+        System.out.println("Appointment service DOWN. Slot sync deferred for Doctor"+doctor.getDname());
+        doctor.setSlotsPending(true);
+        doctorRepository.save(doctor);
         return "Doctor details are stored locally. Slots will be synced with appointment service once it is UP.";
 	}
 	

@@ -17,8 +17,12 @@ import com.repository.PatientRepository;
 @Service
 public class PatientServiceImpl implements PatientService {
 
-	@Autowired
-	PatientRepository patientRepository;
+	private PatientRepository patientRepository;
+	
+	public PatientServiceImpl(PatientRepository patientRepository)
+	{
+		this.patientRepository=patientRepository;
+	}
 
 	@Override
 	public String storePatient(PatientDTO patientDto) throws GlobalException, ConflictException {

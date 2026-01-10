@@ -23,8 +23,12 @@ import jakarta.ws.rs.core.MediaType;
 @RequestMapping("appointments")
 public class AppointmentController {
 	
-	@Autowired
-	AppointmentService appointmentService;
+	private AppointmentService appointmentService;
+	
+	public AppointmentController(AppointmentService appointmentService)
+	{
+		this.appointmentService=appointmentService;
+	}
 	
 	@PostMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String storeappointment(@RequestBody Appointment appointment) throws GlobalException, ResourceNotFoundException

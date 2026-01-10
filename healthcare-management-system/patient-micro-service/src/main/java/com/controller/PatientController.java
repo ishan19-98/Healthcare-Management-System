@@ -28,8 +28,12 @@ import jakarta.ws.rs.core.MediaType;
 @RequestMapping("patients")
 public class PatientController {
 	
-	@Autowired
-	PatientService patientService;
+	private PatientService patientService;
+	
+	public PatientController(PatientService patientService)
+	{
+		this.patientService = patientService;
+	}
 	
 	@PostMapping(value = "",consumes = MediaType.APPLICATION_JSON)
 	public String storePatient(@Valid @RequestBody PatientDTO patient) throws GlobalException, ConflictException

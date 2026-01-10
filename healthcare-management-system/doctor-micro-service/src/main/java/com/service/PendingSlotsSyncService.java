@@ -22,7 +22,7 @@ public class PendingSlotsSyncService {
         this.restTemplate = restTemplate;
     }
     
-	@Scheduled(fixedDelay = 30000)
+	@Scheduled(fixedDelay = 15000)
 	public void SyncSlotsWithAppointmentService() {
 		List<Doctor> doctors = doctorRepository.getDoctorsWithSlotsPending();
 

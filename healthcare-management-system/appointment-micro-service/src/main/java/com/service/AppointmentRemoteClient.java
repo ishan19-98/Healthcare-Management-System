@@ -15,8 +15,12 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 @Service
 public class AppointmentRemoteClient {
 
-	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
+	
+	public AppointmentRemoteClient(RestTemplate restTemplate)
+	{
+		this.restTemplate=restTemplate;
+	}
 	
 	@CircuitBreaker(name = "PATIENT-FETCH-CIRCUIT-BREAKER", fallbackMethod = "fetchPatientFallBack")
 	public Patient fetchPatient(Appointment appointment)

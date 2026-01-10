@@ -13,9 +13,13 @@ import com.repository.SlotRepository;
 @Service
 public class SlotServiceImpl implements SlotService {
 
-	@Autowired
-	SlotRepository slotRepository;
+	private SlotRepository slotRepository;
 
+	public SlotServiceImpl(SlotRepository slotRepository)
+	{
+		this.slotRepository=slotRepository;
+	}
+	
 	@Override
 	public int createSlot(MyRequest myrequest) {
 		// TODO Auto-generated method stub

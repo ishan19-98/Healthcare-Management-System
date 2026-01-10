@@ -26,17 +26,22 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
 
-	@Autowired
-	AppointmentRepository appointmentRepository;
+	private AppointmentRepository appointmentRepository;
 	
-	@Autowired
-	SlotRepository slotRepository;
+	private SlotRepository slotRepository;
 	
-	@Autowired
-	RestTemplate restTemplate;
+	private RestTemplate restTemplate;
 	
-	@Autowired
     private AppointmentRemoteClient remoteClient;
+	
+	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,SlotRepository slotRepository,
+			RestTemplate restTemplate,AppointmentRemoteClient remoteClient)
+	{
+		this.appointmentRepository=appointmentRepository;
+		this.slotRepository=slotRepository;
+		this.restTemplate=restTemplate;
+		this.remoteClient=remoteClient;
+	}
 	
 	@Override
 	public String createAppointment(Appointment appointment) throws GlobalException, ResourceNotFoundException {
