@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,14 +34,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private RestTemplate restTemplate;
 	
     private AppointmentRemoteClient remoteClient;
+    
+    private KafkaTemplate<String, Appointment> kafkaTemplate;
 	
 	public AppointmentServiceImpl(AppointmentRepository appointmentRepository,SlotRepository slotRepository,
-			RestTemplate restTemplate,AppointmentRemoteClient remoteClient)
+			RestTemplate restTemplate,AppointmentRemoteClient remoteClient, KafkaTemplate<String, Appointment> kafkaTemplate )
 	{
 		this.appointmentRepository=appointmentRepository;
 		this.slotRepository=slotRepository;
 		this.restTemplate=restTemplate;
 		this.remoteClient=remoteClient;
+		this.kafkaTemplate=kafkaTemplate;
 	}
 	
 	@Override
@@ -72,6 +76,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             		String docUpdated = remoteClient.updateDoctorSlots(doctor);
             		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
             		{
+            			kafkaTemplate.send("billing-topic", appointment);
             			return "Appointment Created Successfully";
             		}
             		else

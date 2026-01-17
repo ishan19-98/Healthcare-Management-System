@@ -3,9 +3,10 @@ package com.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.bean.Appointment;
+import com.entity.Appointment;
 import com.entity.Bill;
 import com.repository.BillRepository;
 
@@ -15,31 +16,24 @@ public class BillService {
 	@Autowired
 	BillRepository billRepository;
 	
-	@Autowired
-	AppointmentFeignService appointmentFeignService;
 	
-	public String createBill(Bill bill) {
+    @KafkaListener(topics = "billing-topic",groupId = "billing-service")
+	public void generateBill(Appointment appointment) {
 		
-		Appointment appointment = appointmentFeignService.findAppointmentById(bill.getAid());
 		if(appointment !=null)
 		{
-			Bill bl=new Bill();
-			bl.setAid(bill.getAid());
-			bl.setPatientName(appointment.getPatientName());
-			bl.setDoctorName(appointment.getDoctorName());
-			bl.setBillamount(appointment.getAmount());
-			billRepository.save(bl);
-			return "Bill generated successfully for Appointment Id "+bill.getAid()+" with bill id "
-					+bl.getId();
+			Bill bill=new Bill();
+			bill.setAid(appointment.aid());
+			bill.setPatientName(appointment.patientName());
+			bill.setDoctorName(appointment.doctorName());
+			bill.setBillamount(appointment.amount());
+			billRepository.save(bill);
+			System.out.println("Bill generated successfully for Appointment Id "+bill.getAid()+" with bill id "
+					+bill.getBillId());
 		}
-		else
-		{
-			return "There was no appointment scheduled with this id";
-		}
-		
 	}
 
-	public Optional<Bill> findBillById(String id) {
+	public Optional<Bill> findBillByAppointmentId(Integer id) {
 		// TODO Auto-generated method stub
 		return billRepository.findById(id);
 	}

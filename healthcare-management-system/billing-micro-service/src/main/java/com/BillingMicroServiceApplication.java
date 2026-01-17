@@ -5,17 +5,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.kafka.annotation.EnableKafka;
 
 @SpringBootApplication
-@EnableMongoRepositories(basePackages = "com.repository")
-@EnableFeignClients
+@EnableJpaRepositories(basePackages = "com.repository")
+@EntityScan(basePackages = "com.entity")
 @EnableDiscoveryClient
+@EnableKafka
 public class BillingMicroServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BillingMicroServiceApplication.class, args);
-		System.err.println("Patient Service Up at port 8484");
+		System.err.println("Billing Service up at port 8484");
 	}
 
 }

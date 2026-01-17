@@ -1,23 +1,36 @@
 package com.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-@Document(collection = "bill")
+@Entity
 public class Bill {
-  
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+
 	@Id
-	public String id;
-	public int aid;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer billId;
+	public Integer aid;
 	public String patientName;
 	public String doctorName;
+	public Float billamount;
+	
+	
+	
+	public Integer getBillId() {
+		return billId;
+	}
+	public void setBillId(Integer billId) {
+		this.billId = billId;
+	}
+	public Integer getAid() {
+		return aid;
+	}
+	public void setAid(Integer aid) {
+		this.aid = aid;
+	}
 	public String getPatientName() {
 		return patientName;
 	}
@@ -30,18 +43,10 @@ public class Bill {
 	public void setDoctorName(String doctorName) {
 		this.doctorName = doctorName;
 	}
-	public float billamount;
-
-	public int getAid() {
-		return aid;
-	}
-	public void setAid(int aid) {
-		this.aid = aid;
-	}
-	public float getBillamount() {
+	public Float getBillamount() {
 		return billamount;
 	}
-	public void setBillamount(float billamount) {
+	public void setBillamount(Float billamount) {
 		this.billamount = billamount;
 	}
 	
