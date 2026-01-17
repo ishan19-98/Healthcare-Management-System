@@ -26,7 +26,7 @@ public class SlotServiceImpl implements SlotService {
 		int length = myrequest.getParam2().length;
 		for(int i=0;i<length;i++)
 		{
-	    Slot ifExists = slotRepository.getSlotByTime(LocalTime.parse(myrequest.getParam2()[i]));		
+	    Slot ifExists = slotRepository.getSlotByDocIdAndTime(LocalTime.parse(myrequest.getParam2()[i]),myrequest.getParam1());		
 	    if(ifExists==null)
 	    {
 		Slot slot = new Slot();

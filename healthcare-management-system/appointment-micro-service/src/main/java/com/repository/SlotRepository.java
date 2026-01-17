@@ -17,8 +17,11 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface SlotRepository extends JpaRepository<Slot, Integer>{
 
-	@Query("SELECT s FROM Slot s WHERE s.time = :time")
-    public Slot getSlotByTime(@Param("time") LocalTime newtimeslot);
+//	@Query("SELECT s FROM Slot s WHERE s.time = :time")
+//    public Slot getSlotByTime(@Param("time") LocalTime newtimeslot);
+	
+	@Query("SELECT s FROM Slot s WHERE s.time = :time and s.did= :did")
+    public Slot getSlotByDocIdAndTime(@Param("time") LocalTime newtimeslot, @Param("did") int did);
 	
 	@Query("Delete FROM Slot s WHERE s.time = :time")
     public Slot removeSlotByTime(@Param("time") LocalTime newtimeslot);

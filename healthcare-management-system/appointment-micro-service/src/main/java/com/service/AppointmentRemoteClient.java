@@ -51,7 +51,7 @@ public class AppointmentRemoteClient {
 		throw new ResourceNotFoundException("Unable to fetch Doctor details. Doctor Service is DOWN or Doctor record doesnot exists in database!");
 	}
 	
-	public Doctor updateDoctorSlotsFallBack(Doctor doctor, Throwable ex) throws ResourceNotFoundException
+	public String updateDoctorSlotsFallBack(Doctor doctor, Throwable ex) throws ResourceNotFoundException
 	{
 		throw new ResourceNotFoundException("Unable to update Doctor slots. Doctor Service is DOWN!");
 	}

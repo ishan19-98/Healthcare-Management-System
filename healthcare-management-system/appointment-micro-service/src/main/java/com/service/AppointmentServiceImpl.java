@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.bean.Doctor;
@@ -48,6 +49,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 	
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public String createAppointment(Appointment appointment) throws GlobalException, ResourceNotFoundException {
 		Patient patient = remoteClient.fetchPatient(appointment);
 		if(patient != null)
@@ -56,7 +58,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             if(doctor != null)
             {
             	String timeslot = appointment.getTimeslot();
-            	Slot slot = slotRepository.getSlotByTime(LocalTime.parse(timeslot));
+            	Slot slot = slotRepository.getSlotByDocIdAndTime(LocalTime.parse(timeslot),Integer.parseInt(appointment.getDid()) );
             	if(slot==null)
             	{
         			throw new ResourceNotFoundException("There is no available slot exists for given time. Try booking some other time slot.");
@@ -76,7 +78,17 @@ public class AppointmentServiceImpl implements AppointmentService {
             		String docUpdated = remoteClient.updateDoctorSlots(doctor);
             		if(docUpdated.equalsIgnoreCase("Slot has been added successfully"))
             		{
-            			kafkaTemplate.send("billing-topic", appointment);
+            			kafkaTemplate.send("billing-topic", appointment)
+            			.whenComplete((result,ex) -> {
+            			if(ex!=null)
+            				{
+            				System.out.println("Failed to send message to Kafka");
+            				}
+            			else
+            				{
+            				System.out.println("✅ Sent to partition " +
+            		                result.getRecordMetadata().partition());
+            				}});
             			return "Appointment Created Successfully";
             		}
             		else
@@ -116,8 +128,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 		{
 			String newtimeslot = appointment.getTimeslot();
 			String oldtimeslot = appointmentRepository.getSlotIdById(appointment.getAid());
-        	Slot newslot = slotRepository.getSlotByTime(LocalTime.parse(newtimeslot));
-        	Slot oldslot = slotRepository.getSlotByTime(LocalTime.parse(oldtimeslot));
+			Slot newslot = slotRepository.getSlotByDocIdAndTime(LocalTime.parse(newtimeslot),Integer.parseInt(appointmentDb.get().getDid()));
+        	Slot oldslot =  slotRepository.getSlotByDocIdAndTime(LocalTime.parse(oldtimeslot),Integer.parseInt(appointmentDb.get().getDid()));
         	if(!newslot.isBookFlag())
         	{
         		Appointment appointmentnew=appointmentRepository.getById(appointment.getAid());
@@ -166,7 +178,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		else
 		{
 			String oldtimeslot = appointmentRepository.getSlotIdById(aid);
-        	Slot oldslot = slotRepository.getSlotByTime(LocalTime.parse(oldtimeslot));
+        	Slot oldslot = slotRepository.getSlotByDocIdAndTime(LocalTime.parse(oldtimeslot),Integer.parseInt(appointment.get().getDid()));
         	slotRepository.updateSlotDetails(false, oldslot.getSid(),Integer.parseInt(appointment.get().getDid()));
 			appointmentRepository.deleteById(aid); 
 			
