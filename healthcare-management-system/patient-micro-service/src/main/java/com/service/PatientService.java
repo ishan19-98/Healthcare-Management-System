@@ -1,5 +1,7 @@
 package com.service;
 
+import java.io.IOException;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,5 +21,8 @@ public interface PatientService {
 	public String updatePatientDetails(PatientDTO patientDto) throws ResourceNotFoundException;
 	
 	public Page<PatientDTO> findAllPatients(Pageable pageable);
+
+	public String predictPatientAvailability(int distanceFromClinicKm, int previousNumberOfAppointments,
+			int pastNoShowCount) throws IOException;
 		
 }

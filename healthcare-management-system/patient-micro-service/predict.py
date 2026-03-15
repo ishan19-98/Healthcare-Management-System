@@ -15,4 +15,4 @@ df=pd.DataFrame([[distanceFromClinicKm,previousNumberOfAppointments,pastNoShowCo
     ])
 
 prediction=model.predict(df)
-print(prediction)
+print(prediction[0])

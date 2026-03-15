@@ -1,5 +1,7 @@
 package com.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -74,6 +76,12 @@ public class PatientController {
 	public PatientDTO findPatientByPhoneNo(@PathVariable("phoneno") Long phoneno)
 	{
 		return patientService.findPatientByPhoneNumber(phoneno);		
+	}
+	
+	@GetMapping(value="predict-attendance",produces = MediaType.APPLICATION_JSON)
+	public String predictPatientAvailability(@RequestParam int distanceFromClinicKm, int previousNumberOfAppointments, int pastNoShowCount) throws IOException
+	{
+		return patientService.predictPatientAvailability(distanceFromClinicKm,previousNumberOfAppointments,pastNoShowCount);
 	}
 
 }

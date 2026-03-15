@@ -1,5 +1,8 @@
 package com.service;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +114,39 @@ public class PatientServiceImpl implements PatientService {
 		patientDto.setAge(patient.getAge());
 		
 		return patientDto;
+	}
+
+	@Override
+	public String predictPatientAvailability(int distanceFromClinicKm, int previousNumberOfAppointments,
+			int pastNoShowCount) throws IOException {
+		
+		
+		//invoke the ML model using a python script
+		ProcessBuilder pb = new ProcessBuilder(
+	            "python",
+	            "predict.py",
+	            String.valueOf(distanceFromClinicKm),
+	            String.valueOf(previousNumberOfAppointments),
+	            String.valueOf(pastNoShowCount)
+	    );
+
+	    Process process = pb.start();
+
+	    BufferedReader reader =
+	            new BufferedReader(
+	                    new InputStreamReader(process.getInputStream()));
+
+	    String result = reader.readLine();
+
+	    if(Integer.parseInt(result)==1)
+	    {
+	    	return "Patient is likely to attend the appointment";
+	    }
+	    else
+	    {
+	    	return "Patient is likely to miss the appointment";
+	    }
+
 	}
 
 }
