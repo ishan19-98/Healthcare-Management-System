@@ -1,26 +1,104 @@
-# Healthcare-Management-System
+Healthcare Appointment and Patient Management System
 
-Healthcare Appointment and Patient Management System with Microservices
+A microservices-based healthcare management platform designed to streamline interactions between patients, doctors, and administrative staff. The system enables efficient appointment scheduling, patient management, and billing operations while maintaining scalability and modularity through a microservices architecture.
+
+The platform also integrates a Machine Learning–based prediction module that predicts whether a patient is likely to attend or miss an appointment, helping healthcare providers proactively manage scheduling and reduce no-shows.
+
 Architecture
 
-Technologies Used: Java, Spring Boot, Microservices, Restful API, Spring ORM, Spring Data
-JPA, MySQL, MongoDB, Docker, Kubernetes
+The application follows a microservices architecture, where each service is responsible for a specific domain and communicates with other services using REST APIs and asynchronous messaging.
 
-Description: The Healthcare Appointment and Patient Management System is a scalable and
-secure platform designed to facilitate seamless interactions between patients, doctors, and
-administrative personnel. Built using a microservices architecture, the system allows patients to
-book appointments for their respective doctors and manage their schedules ensuring efficient
-healthcare delivery.
+Core Microservices
 
-Key Features:
-• Microservices Architecture: Modular design for independent scaling and maintenance
-of services.
-• Patient Management: Robust service for registering and managing patient information.
-• Doctor Scheduling: Robust service for registering and managing doctor information
-• Appointment Booking: Flexible appointment management with features for scheduling,
-updating appointment slots, and cancellations.
-• Billing Integration: Automated billing service for processing payments and generating
-invoices.
-• API Gateway: Centralized routing and security for handling client requests.
-• Containerization: Docker containers for consistent deployment across environments.
-• Orchestration: Kubernetes for automated scaling and load balancing services.
+Patient Service
+
+Manages patient registration and profile information.
+
+Stores patient details such as name, age, and contact information.
+
+Provides APIs to retrieve and update patient data.
+
+Doctor Service
+
+Manages doctor profiles and their specialization.
+
+Maintains available time slots for appointments.
+
+Appointment Booking Service
+
+Handles appointment scheduling between patients and doctors.
+
+Validates doctor availability before confirming bookings.
+
+Billing Service
+
+Generates billing records based on completed appointments.
+
+Machine Learning Integration
+
+To enhance scheduling efficiency, the system integrates a Machine Learning model that predicts patient attendance.
+
+Prediction Goal
+
+Predict whether a patient is likely to attend or miss an appointment.
+
+Model Used
+
+Logistic Regression (Supervised Machine Learning)
+
+Features Used
+
+distanceFromClinicKm
+
+previousNumberOfAppointments
+
+pastNoShowCount
+
+Output
+
+Binary prediction:
+
+1 → Patient likely to attend
+0 → Patient likely to miss appointment
+
+The trained model is built using Python and Scikit-learn, saved as a serialized model file, and invoked from the Java microservice to generate predictions.
+
+This feature enables:
+
+identification of high-risk no-show patients
+
+proactive scheduling decisions
+
+improved healthcare resource utilization
+
+Technologies Used
+
+Backend
+
+Java
+
+Spring Boot
+
+Spring Data JPA
+
+Spring ORM
+
+Spring AOP
+
+Microservices & Communication
+
+RESTful APIs
+
+Apache Kafka
+
+Machine Learning
+
+Python
+
+Scikit-learn
+
+Logistic Regression
+
+Deployment
+
+Docker
