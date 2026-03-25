@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,22 +21,29 @@ public class PatientServiceImpl implements PatientService {
 
 	private PatientRepository patientRepository;
 	
+	private static final Logger logger = LoggerFactory.getLogger(PatientServiceImpl.class);
+	
 	public PatientServiceImpl(PatientRepository patientRepository)
 	{
+		logger.info("Service started...");
 		this.patientRepository=patientRepository;
 	}
 
 	@Override
 	public String storePatient(PatientDTO patientDto) throws GlobalException, ConflictException {
 		Patient patient=convertBeanToEntity(patientDto);
+		logger.debug("Searching patient details with patient id "+patientDto.getPid());
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
 		if(result.isPresent())
 		{
+			logger.error("Patient detail already exists"+result);
 			throw new ConflictException("Patient with given id already exists! Try adding patient using some other patient id.");
 		}
 		else
 		{
+			logger.debug("Saving patient details with patient id "+patientDto.getPid());
 			patientRepository.save(patient);
+			logger.debug("Patient "+patient+" details saved successfully in database");
 		    return "Patient "+ patient.getPname() + " details stored successfully";
 		}
 	}
@@ -59,38 +65,53 @@ public class PatientServiceImpl implements PatientService {
 	@Override
 	public String updatePatientDetails(PatientDTO patientDto) throws ResourceNotFoundException {
 		Patient patient=convertBeanToEntity(patientDto);
+		logger.debug("Searching patient details with patient id"+patientDto.getPid());
 		Optional<Patient> result = patientRepository.findById(patient.getPid());
 		if(result.isEmpty())
 		{
+			logger.error("Patient details with given id "+patient.getPid()+" not found");
 			throw new ResourceNotFoundException("Patient " + result.get().getPname() + " with given id doesn't exists!");
 		}
 		else
 		{
+			logger.debug("Patient details with patient id "+patientDto.getPid()+" retrieved successfully");
 			Patient patientnew = new Patient();
+			
+			logger.debug("Setting patient id to "+patient.getPid());
 			patientnew.setPid(patient.getPid());
 			
-			if(patient.getPname()!=null)
-			 patientnew.setPname(patient.getPname());
-			else
-			 patientnew.setPname(result.get().getPname());
+			if (patient.getPname() != null) {
+				logger.debug("Setting patient id to " + patient.getPid());
+				patientnew.setPname(patient.getPname());
+			} else {
+				logger.debug("Setting patient id to " + patient.getPid());
+				patientnew.setPname(result.get().getPname());
+			}
 			
-			if(patient.getAge()!=0)
-			 patientnew.setAge(patient.getAge());
-			else
+			if(patient.getAge()!=0) {
+			 logger.debug("Setting patient age to " + patient.getAge());
+			 patientnew.setAge(patient.getAge());}
+			else {
+			 logger.debug("Setting patient age to " + patient.getAge());
 			 patientnew.setAge(result.get().getAge());
+			}
+			if(patient.getPhoneno()!=0) {
+			 logger.debug("Setting patient phoneno to " + patient.getPhoneno());
+			 patientnew.setPhoneno(patient.getPhoneno());}
+			else {
+		     logger.debug("Setting patient phoneno to " + patient.getPhoneno());
+			 patientnew.setPhoneno(result.get().getPhoneno());}
 			
-			if(patient.getPhoneno()!=0)
-			 patientnew.setPhoneno(patient.getPhoneno());
-			else
-			 patientnew.setPhoneno(result.get().getPhoneno());
-			
+			logger.debug("Saving updated patient details "+patientnew);
 			patientRepository.saveAndFlush(patientnew);
+			logger.debug("Patient "+patientnew.getPname()+" details saved successfully in database");
 			return "Patient "+ patientnew.getPname() + " details updated successfully";
 		}
 	}
 
 	@Override
 	public Page<PatientDTO> findAllPatients(Pageable pageable) {
+		logger.debug("Retrieving all Patient details");
 		return patientRepository.findAll(pageable).map(PatientServiceImpl::convertEntityToBean);
 	}
 	
